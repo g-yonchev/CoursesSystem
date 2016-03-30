@@ -11,7 +11,5 @@
         User GetById(int id);
 
         User Create(string firstName, string lastName, int age, bool isMale, bool isEmployeer, string email, string phoneNumber, string address);
-
-        void JoinToCourse(int userId, int courseId);
     }
 }

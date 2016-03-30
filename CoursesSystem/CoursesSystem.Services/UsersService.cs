@@ -10,12 +10,10 @@
     public class UsersService : IUsersService
     {
         private readonly IDbRepository<User> users;
-        private readonly ICoursesService coursesService;
 
-        public UsersService(IDbRepository<User> users, ICoursesService coursesService)
+        public UsersService(IDbRepository<User> users)
         {
             this.users = users;
-            this.coursesService = coursesService;
         }
 
         public IQueryable<User> GetAll()
@@ -48,15 +46,6 @@
             this.users.Save();
 
             return user;
-        }
-
-        public void JoinToCourse(int userId, int courseId)
-        {
-            var user = this.GetById(userId);
-            var course = this.coursesService.GetById(courseId);
-            user.Courses.Add(course);
-
-            this.users.Save();
         }
     }
 }

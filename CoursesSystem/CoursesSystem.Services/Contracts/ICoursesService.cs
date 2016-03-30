@@ -7,12 +7,14 @@
 
     public interface ICoursesService
     {
-        IQueryable<Course> GetAllActive();
+        IQueryable<Course> GetAll();
 
         Course GetById(int id);
 
         Course Create(string name);
         
         void AddPeriod(int courseId, DateTime start, DateTime end);
+
+        void Join(int courseId, int userId);
     }
 }

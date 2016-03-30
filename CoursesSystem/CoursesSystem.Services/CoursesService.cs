@@ -10,18 +10,20 @@
     public class CoursesService : ICoursesService
     {
         private readonly IDbRepository<Course> courses;
-        private readonly IPeriodsService periodsService;
+        private readonly IDbRepository<User> users;
+        private readonly IDbRepository<Period> periods;
 
-        public CoursesService(IDbRepository<Course> courses, IPeriodsService periodsService)
+        public CoursesService(IDbRepository<Course> courses, IDbRepository<User> users, IDbRepository<Period> periods)
         {
             this.courses = courses;
-            this.periodsService = periodsService;
+            this.users = users;
+            this.periods = periods;
         }
 
-        public IQueryable<Course> GetAllActive()
+        public IQueryable<Course> GetAll()
         {
-            var activeCourses = this.courses.All().Where(c => c.HasActivePeriods == true);
-            return activeCourses;
+            var courses = this.courses.All();
+            return courses;
         }
 
         public Course GetById(int id)
@@ -45,10 +47,29 @@
 
         public void AddPeriod(int courseId, DateTime start, DateTime end)
         {
-            var period = this.periodsService.Create(start, end);
+            var period = new Period
+            {
+                StartDate = start,
+                EndDate = end
+            };
+            this.periods.Add(period);
+            this.periods.Save();
+
             var course = this.GetById(courseId);
             course.Periods.Add(period);
 
+            this.courses.Save();
+        }
+
+        public void Join(int courseId, int userId)
+        {
+            var course = this.courses.GetById(courseId);
+
+            var user = this.users.GetById(userId);
+
+            user.Courses.Add(course);
+            course.Users.Add(user);
+            this.users.Save();
             this.courses.Save();
         }
     }
