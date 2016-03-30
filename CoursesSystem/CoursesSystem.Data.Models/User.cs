@@ -1,9 +1,17 @@
 ﻿namespace CoursesSystem.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class User
     {
+        private ICollection<Course> courses;
+
+        public User()
+        {
+            this.courses = new HashSet<Course>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -22,5 +30,11 @@
         public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
+
+        public virtual ICollection<Course> Courses
+        {
+            get { return this.courses; }
+            set { this.courses = value; }
+        }
     }
 }
