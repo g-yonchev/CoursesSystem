@@ -67,9 +67,7 @@ namespace CoursesSystem.Server.Controllers
             // check logged user
             // check user is employeer.
             // check model is valid.
-
-            this.coursesService.Join(courseId, userId);
-
+            
             return this.Ok("joined");
         }
 
@@ -77,13 +75,9 @@ namespace CoursesSystem.Server.Controllers
         [Route("periods/{courseId}/{userId}")]
         public IHttpActionResult AddPeriod(PeriodRequestModel model, int courseId, int userId)
         {
-            // check logged user
-            // check user is employeer.
-            // check model is valid.
-
-            this.coursesService.Join(courseId, userId);
-
-            return this.Ok("joined");
+           
+            
+            return this.Ok();
         }
     }
 }
