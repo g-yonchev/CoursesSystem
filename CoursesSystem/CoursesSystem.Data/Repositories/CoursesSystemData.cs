@@ -48,7 +48,7 @@ namespace CoursesSystem.Data.Repositories
             return this.context.SaveChanges();
         }
 
-        private IDbRepository<T> GetRepository<T>() where T : class
+        public IDbRepository<T> GetRepository<T>() where T : class
         {
             var typeOfRepository = typeof(T);
 

@@ -43,9 +43,9 @@
                 .Bind<ICoursesSystemDbContext>()
                 .To<CoursesSystemDbContext>();
 
-            kernel.Bind(x => x.From("CoursesSystem.Services")
-                                .SelectAllClasses()
-                                .BindDefaultInterface());
+            kernel
+                .Bind<ICoursesSystemData>()
+                .To<CoursesSystemData>();
         }
     }
 }

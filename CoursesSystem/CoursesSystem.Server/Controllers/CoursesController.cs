@@ -3,8 +3,6 @@ using CoursesSystem.Data.Models;
 using CoursesSystem.Data.Repositories;
 using CoursesSystem.Server.Models.Courses;
 using CoursesSystem.Server.Models.Periods;
-using CoursesSystem.Services;
-using CoursesSystem.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -15,30 +13,30 @@ using System.Web.Http;
 namespace CoursesSystem.Server.Controllers
 {
     [RoutePrefix("api/courses")]
-    public class CoursesController : ApiController
+    public class CoursesController : BaseController
     {
-        private readonly ICoursesService coursesService;
-
-        // Poor man's IoC
-        public CoursesController()
+        public CoursesController(ICoursesSystemData data)
+            : base(data)
         {
-            this.coursesService = new CoursesService(
-                                        new DbRepository<Course>(new CoursesSystemDbContext()),
-                                        new DbRepository<User>(new CoursesSystemDbContext()),
-                                        new DbRepository<Period>(new CoursesSystemDbContext()));
         }
 
         [HttpGet]
         public IHttpActionResult GetAllActive()
         {
-            var courses = this.coursesService.GetAll().ToList();
+            var courses = this.data.Courses
+                                    .All()
+                                    .Where(x => x.Periods.Any(p => p.StartDate > DateTime.Now))
+                                    .OrderBy(x => x.Name)
+                                    .Select(x => new { name = x.Name })
+                                    .ToList();
+
             return this.Ok(courses);
         }
 
         [HttpGet]
         public IHttpActionResult GetById(int id)
         {
-            var course = this.coursesService.GetById(id);
+            var course = this.data.Courses.GetById(id);
 
             if (course == null)
             {
@@ -55,7 +53,13 @@ namespace CoursesSystem.Server.Controllers
             // check user is employeer.
             // check model is valid.
 
-            var course = this.coursesService.Create(model.Name);
+            var course = new Course
+            {
+                Name = model.Name
+            };
+
+            this.data.Courses.Add(course);
+            this.data.SaveChanges();
 
             return this.Ok(course);
         }
@@ -67,16 +71,34 @@ namespace CoursesSystem.Server.Controllers
             // check logged user
             // check user is employeer.
             // check model is valid.
-            
+
+            var user = this.data.Users.GetById(userId);
+            var course = this.data.Courses.GetById(courseId);
+
+            // check user is already in this course.
+
+
+            user.Courses.Add(course);
+            this.data.SaveChanges();
+
             return this.Ok("joined");
         }
 
         [HttpPut]
-        [Route("periods/{courseId}/{userId}")]
-        public IHttpActionResult AddPeriod(PeriodRequestModel model, int courseId, int userId)
+        [Route("periods/{courseId}")]
+        public IHttpActionResult AddPeriod(PeriodRequestModel model, int courseId)
         {
-           
-            
+            // TODO: check: first period savechanges or first add and then savechanges?!?!?1
+            var period = new Period
+            {
+                StartDate = model.StartDate,
+                EndDate = model.EndDate
+            };
+
+            var course = this.data.Courses.GetById(courseId);
+            course.Periods.Add(period);
+            this.data.SaveChanges();
+
             return this.Ok();
         }
     }

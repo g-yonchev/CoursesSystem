@@ -1,9 +1,7 @@
 ﻿namespace CoursesSystem.Data.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
 
     public class Course
     {
@@ -22,15 +20,6 @@
         public string Name { get; set; }
 
         public string Code { get; set; }
-
-        public bool HasActivePeriods
-        {
-            get
-            {
-                var isActive = this.Periods.Any(x => x.StartDate > DateTime.Now);
-                return isActive;
-            }
-        }
 
         public virtual ICollection<User> Users
         {

@@ -16,5 +16,7 @@ namespace CoursesSystem.Data.Repositories
         IDbRepository<Period> Periods { get; }
 
         int SaveChanges();
+
+        IDbRepository<T> GetRepository<T>() where T : class;
     }
 }

@@ -2,8 +2,6 @@
 using CoursesSystem.Data.Models;
 using CoursesSystem.Data.Repositories;
 using CoursesSystem.Server.Models.Users;
-using CoursesSystem.Services;
-using CoursesSystem.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +10,24 @@ using System.Web.Http;
 
 namespace CoursesSystem.Server.Controllers
 {
-    public class UsersController : ApiController
+    public class UsersController : BaseController
     {
-        private readonly IUsersService usersService;
-
-        // Poor man's IoC
-        public UsersController()
+        public UsersController(ICoursesSystemData data)
+            : base(data)
         {
-            this.usersService = new UsersService(new DbRepository<User>(new CoursesSystemDbContext()));
         }
 
         [HttpGet]
         public IHttpActionResult Get()
         {
-            var users = this.usersService.GetAll().ToList();
+            var users = this.data.Users.All().ToList();
             return this.Ok(users);
         }
 
         [HttpGet]
         public IHttpActionResult GetById(int id)
         {
-            var user = this.usersService.GetById(id);
+            var user = this.data.Users.GetById(id);
 
             if (user == null)
             {
@@ -45,15 +40,19 @@ namespace CoursesSystem.Server.Controllers
         [HttpPost]
         public IHttpActionResult Create(UserRequestModel model)
         {
-            var user = this.usersService.Create(
-                model.FirstName,
-                model.LastName,
-                model.Age,
-                model.IsMale,
-                model.IsEmployeer,
-                model.Email,
-                model.PhoneNumber,
-                model.Address);
+            var user = new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Age = model.Age,
+                IsMale = model.IsMale,
+                IsEmployeer = model.IsEmployeer,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address
+            };
+
+            this.data.Users.Add(user);
 
             return this.Ok(user);
         }
