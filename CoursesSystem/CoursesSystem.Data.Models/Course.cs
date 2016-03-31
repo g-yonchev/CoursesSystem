@@ -5,13 +5,11 @@
 
     public class Course
     {
-        private ICollection<User> users;
-        private ICollection<Period> periods;
+        private ICollection<CoursePeriod> periods;
 
         public Course()
         {
-            this.users = new HashSet<User>();
-            this.periods = new HashSet<Period>();
+            this.periods = new HashSet<CoursePeriod>();
         }
 
         [Key]
@@ -21,13 +19,7 @@
 
         public string Code { get; set; }
 
-        public virtual ICollection<User> Users
-        {
-            get { return this.users; }
-            set { this.users = value; }
-        }
-
-        public virtual ICollection<Period> Periods
+        public virtual ICollection<CoursePeriod> Periods
         {
             get { return this.periods; }
             set { this.periods = value; }

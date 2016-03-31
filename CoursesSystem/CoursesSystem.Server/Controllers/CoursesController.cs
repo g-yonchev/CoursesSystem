@@ -1,17 +1,15 @@
-﻿using CoursesSystem.Data;
-using CoursesSystem.Data.Models;
-using CoursesSystem.Data.Repositories;
-using CoursesSystem.Server.Models.Courses;
-using CoursesSystem.Server.Models.Periods;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-
-namespace CoursesSystem.Server.Controllers
+﻿namespace CoursesSystem.Server.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Web.Http;
+
+    using CoursesSystem.Data.Models;
+    using CoursesSystem.Data.Repositories;
+    using CoursesSystem.Server.Infrastructure.Mapping;
+    using CoursesSystem.Server.Models.Courses;
+    using CoursesSystem.Server.Models.Periods;
+
     [RoutePrefix("api/courses")]
     public class CoursesController : BaseController
     {
@@ -23,13 +21,13 @@ namespace CoursesSystem.Server.Controllers
         [HttpGet]
         public IHttpActionResult GetAllActive()
         {
-            var courses = this.data.Courses
+            var courses = this.data.Periods
                                     .All()
-                                    .Where(x => x.Periods.Any(p => p.StartDate > DateTime.Now))
-                                    .OrderBy(x => x.Name)
-                                    .Select(x => new { name = x.Name })
+                                    .Where(x => x.StartDate > DateTime.Now)
+                                    .To<CourseResponseModel>()
+                                    .OrderBy(x => x.StartDate)
                                     .ToList();
-
+            
             return this.Ok(courses);
         }
 
@@ -55,30 +53,36 @@ namespace CoursesSystem.Server.Controllers
 
             var course = new Course
             {
-                Name = model.Name
+                Name = model.Name,
+                Code = model.Code
             };
 
             this.data.Courses.Add(course);
             this.data.SaveChanges();
-
-            return this.Ok(course);
+            
+            return this.Ok("Created");
         }
 
         [HttpPut]
-        [Route("join/{courseId}/{userId}")]
-        public IHttpActionResult Join(int courseId, int userId)
+        [Route("join/{periodId}/{userId}")]
+        public IHttpActionResult Join(int periodId, int userId)
         {
             // check logged user
             // check user is employeer.
             // check model is valid.
 
             var user = this.data.Users.GetById(userId);
-            var course = this.data.Courses.GetById(courseId);
+            var period = this.data.Periods.GetById(periodId);
+
+            var isUserAlreadyJoined = user.CoursePeriods.Any(x => x == period);
 
             // check user is already in this course.
+            if (isUserAlreadyJoined)
+            {
+                return this.Ok("already joined");
+            }
 
-
-            user.Courses.Add(course);
+            user.CoursePeriods.Add(period);
             this.data.SaveChanges();
 
             return this.Ok("joined");
@@ -88,8 +92,7 @@ namespace CoursesSystem.Server.Controllers
         [Route("periods/{courseId}")]
         public IHttpActionResult AddPeriod(PeriodRequestModel model, int courseId)
         {
-            // TODO: check: first period savechanges or first add and then savechanges?!?!?1
-            var period = new Period
+            var period = new CoursePeriod
             {
                 StartDate = model.StartDate,
                 EndDate = model.EndDate

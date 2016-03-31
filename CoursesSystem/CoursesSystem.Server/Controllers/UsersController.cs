@@ -1,15 +1,13 @@
-﻿using CoursesSystem.Data;
-using CoursesSystem.Data.Models;
-using CoursesSystem.Data.Repositories;
-using CoursesSystem.Server.Models.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-
-namespace CoursesSystem.Server.Controllers
+﻿namespace CoursesSystem.Server.Controllers
 {
+    using System.Linq;
+    using System.Web.Http;
+
+    using CoursesSystem.Data.Models;
+    using CoursesSystem.Data.Repositories;
+    using CoursesSystem.Server.Infrastructure.Mapping;
+    using CoursesSystem.Server.Models.Users;
+
     public class UsersController : BaseController
     {
         public UsersController(ICoursesSystemData data)
@@ -20,7 +18,7 @@ namespace CoursesSystem.Server.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            var users = this.data.Users.All().ToList();
+            var users = this.data.Users.All().To<UserResponseModel>().ToList();
             return this.Ok(users);
         }
 

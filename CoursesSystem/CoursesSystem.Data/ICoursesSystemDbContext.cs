@@ -13,7 +13,7 @@ namespace CoursesSystem.Data
     {
         IDbSet<User> Users { get; set; }
 
-        IDbSet<Period> Periods { get; set; }
+        IDbSet<CoursePeriod> CoursePeriods { get; set; }
 
         IDbSet<Course> Courses { get; set; }
 

@@ -1,12 +1,9 @@
-﻿using CoursesSystem.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-
-namespace CoursesSystem.Server.Controllers
+﻿namespace CoursesSystem.Server.Controllers
 {
+    using System.Web.Http;
+
+    using CoursesSystem.Data.Repositories;
+
     public abstract class BaseController : ApiController
     {
         protected ICoursesSystemData data;

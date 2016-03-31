@@ -192,6 +192,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Infrastructure\Mapping\IQueryableExtensions.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\NinjectDependencyScope.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -225,7 +226,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -233,8 +233,10 @@
     <Compile Include="Infrastructure\Mapping\IMapFrom.cs" />
     <Compile Include="Infrastructure\ObjectFactory.cs" />
     <Compile Include="Models\Courses\CourseRequestModel.cs" />
+    <Compile Include="Models\Courses\CourseResponseModel.cs" />
     <Compile Include="Models\Periods\PeriodRequestModel.cs" />
     <Compile Include="Models\Users\UserRequestModel.cs" />
+    <Compile Include="Models\Users\UserResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@
     using CoursesSystem.Data.Models;
     using CoursesSystem.Server.Infrastructure.Mapping;
 
-    public class PeriodRequestModel : IMapFrom<Period>
+    public class PeriodRequestModel : IMapFrom<CoursePeriod>
     {
         public DateTime StartDate { get; set; }
 

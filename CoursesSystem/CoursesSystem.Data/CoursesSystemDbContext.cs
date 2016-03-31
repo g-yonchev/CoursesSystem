@@ -16,7 +16,7 @@
 
         public virtual IDbSet<Course> Courses { get; set; }
 
-        public virtual IDbSet<Period> Periods { get; set; }
+        public virtual IDbSet<CoursePeriod> CoursePeriods { get; set; }
 
         public static CoursesSystemDbContext Create()
         {

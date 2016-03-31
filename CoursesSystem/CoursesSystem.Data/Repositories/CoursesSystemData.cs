@@ -27,11 +27,11 @@ namespace CoursesSystem.Data.Repositories
             }
         }
 
-        public IDbRepository<Period> Periods
+        public IDbRepository<CoursePeriod> Periods
         {
             get
             {
-                return this.GetRepository<Period>();
+                return this.GetRepository<CoursePeriod>();
             }
         }
 

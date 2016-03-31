@@ -13,7 +13,7 @@ namespace CoursesSystem.Data.Repositories
 
         IDbRepository<Course> Courses { get; }
 
-        IDbRepository<Period> Periods { get; }
+        IDbRepository<CoursePeriod> Periods { get; }
 
         int SaveChanges();
 
